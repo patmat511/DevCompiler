@@ -193,7 +193,7 @@ cd devcompiler
 dotnet restore
 ```
 
-**2. Setup PostgreSQL:**
+**2. Setup MSSQL:**
 ```bash
 docker run -e "ACCEPT_EULA=Y" \
   -e "SA_PASSWORD=testpassword" \
