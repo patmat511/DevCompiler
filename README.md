@@ -1,5 +1,6 @@
 <div align="center">
 <img width="1141" height="231" alt="image" src="https://github.com/user-attachments/assets/eef2b2a8-85d4-45ff-b072-734bd2163b9d" />
+
 ### Real-time Collaborative Code Editor
 
 **Free • Open Source • Privacy-First**
