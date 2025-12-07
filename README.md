@@ -72,53 +72,45 @@
 ## 🏗️ Architecture
 
 DevCompiler follows **Clean Architecture** (Onion Architecture) principles for maintainability, testability, and scalability.
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                         Presentation Layer                      │
-│                     (DevCompiler.API)                           │
-│  ┌────────────┐  ┌────────────┐  ┌────────────────────────┐     │
-│  │Controllers │  │  SignalR   │  │  Angular Frontend      │     │
-│  │            │  │   Hubs     │  │                        │     │
-│  └────────────┘  └────────────┘  └────────────────────────┘     │
-└─────────────────────────────────────────────────────────────────┘
-                            ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      Application Layer                          │
-│                  (DevCompiler.Application)                      │
-│  ┌────────────┐  ┌────────────┐  ┌────────────────────────┐     │
-│  │  Services  │  │    DTOs    │  │     Interfaces         │     │
-│  │            │  │            │  │                        │     │
-│  └────────────┘  └────────────┘  └────────────────────────┘     │
-└─────────────────────────────────────────────────────────────────┘
-                            ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      Domain Layer (Core)                        │
-│                    (DevCompiler.Domain)                         │
-│  ┌────────────┐  ┌────────────┐  ┌────────────────────────┐     │
-│  │  Entities  │  │ Interfaces │  │   Business Logic       │     │
-│  │            │  │            │  │                        │     │
-│  └────────────┘  └────────────┘  └────────────────────────┘     │
-└─────────────────────────────────────────────────────────────────┘
-                            ▲
-┌─────────────────────────────────────────────────────────────────┐
-│                    Infrastructure Layer                         │
-│                 (DevCompiler.Infrastructure)                    │
-│  ┌────────────┐  ┌────────────┐  ┌────────────────────────┐     │
-│  │EF Core DB  │  │   Roslyn   │  │    JWT Service         │     │
-│  │            │  │  Compiler  │  │                        │     │
-│  └────────────┘  └────────────┘  └────────────────────────┘     │
-└─────────────────────────────────────────────────────────────────┘
-```
+```mermaid
+graph TD
+    subgraph Client [Frontend - Angular]
+        UI[Monaco Editor]
+        SignalR_Client[SignalR Client]
+    end
 
-### Dependency Flow
-```
-API → Application → Domain
-  ↓         ↓
-Infrastructure
-```
+    subgraph API [Presentation Layer - .NET API]
+        Controllers
+        Hubs[SignalR Hubs]
+    end
 
-**Golden Rule**: Domain has ZERO dependencies!
+    subgraph App [Application Layer]
+        Services
+        DTOs
+    end
 
+    subgraph Domain [Domain Layer]
+        Entities
+        Logic[Business Logic]
+    end
+
+    subgraph Infra [Infrastructure Layer]
+        EF[EF Core]
+        Roslyn[Roslyn Compiler]
+    end
+
+    UI --> SignalR_Client
+    SignalR_Client <-->|WebSocket| Hubs
+    Controllers --> Services
+    Hubs --> Services
+    Services --> Logic
+    Services --> EF
+    Services --> Roslyn
+    
+    style Client fill:#dd0031,stroke:#333,stroke-width:2px,color:#fff
+    style API fill:#512bd4,stroke:#333,stroke-width:2px,color:#fff
+    style Infra fill:#178cff,stroke:#333,stroke-width:2px,color:#fff
+```
 ---
 
 ## 🛠️ Tech Stack
@@ -359,37 +351,4 @@ dotnet test
 # Run with coverage
 dotnet test /p:CollectCoverage=true
 ```
-
----
-
-
-## 📝 License
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-```
-MIT License
-
-Copyright (c) 2024 DevCompiler
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
----
-
 
