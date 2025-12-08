@@ -1,4 +1,6 @@
+using DevCompiler.Application.Interfaces;
 using DevCompiler.Domain.Interfaces;
+using DevCompiler.Infrastructure.Authentication;
 using DevCompiler.Infrastructure.Compiler;
 using DevCompiler.Infrastructure.Data;
 using DevCompiler.Infrastructure.Data.Repositories;
@@ -28,7 +30,7 @@ public static class DependencyInjection
 
         // Services
         services.AddScoped<ICompilerService, RoslynCompilerService>();
-        // Jwt
+        services.AddSingleton<IAuthService, JwtService>();
 
         return services;
     }
