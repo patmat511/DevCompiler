@@ -1,8 +1,11 @@
 using DevCompiler.Domain.Interfaces;
+using DevCompiler.Infrastructure.Compiler;
 using DevCompiler.Infrastructure.Data;
+using DevCompiler.Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Runtime.CompilerServices;
 
 namespace DevCompiler.Infrastructure;
 
@@ -20,11 +23,11 @@ public static class DependencyInjection
             ));
 
         // Repositories
-        services.AddScoped<IRoomRepository, RoomRepository>();
+        services.AddScoped<IRoomRepository, RoomReposiotry>();
 
 
         // Services
-        // Roslyn
+        services.AddScoped<ICompilerService, RoslynCompilerService>();
         // Jwt
 
         return services;
